@@ -12,6 +12,9 @@ app.config(function ($stateProvider) {
       },
       users: function (User) {
         return User.fetchAll();
+      },
+      currentUserID: function(AuthFactory) {
+        return AuthFactory.getCurrentUser()
       }
     }
   });

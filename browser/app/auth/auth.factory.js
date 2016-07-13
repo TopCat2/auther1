@@ -2,11 +2,18 @@
 
 app.factory('AuthFactory', function ($http, $log) {
   var AuthFactory = {};
+  var currentUser = null;
 
+  AuthFactory.getCurrentUser = function() {
+    return currentUser;
+  }
+  
   AuthFactory.login = function(email, password) {
     return $http.post('/login', {email: email, password: password})
     .then(function(response){
-        return true;
+console.log("Login.  response is", response)
+      currentUser = email;
+      return true;
     })
     .catch(function(err) {
         if(err.status === 401) {
@@ -21,7 +28,9 @@ app.factory('AuthFactory', function ($http, $log) {
   AuthFactory.signup = function(email, password) {
    return $http.post('/signup', {email: email, password: password})
     .then(function(response){
-        return true;
+      console.log("signup.  Responseis", response)
+      currentUser = email;
+      return true;
     })
     .catch(function(err) {
         if(err.status === 409) {
@@ -34,7 +43,8 @@ app.factory('AuthFactory', function ($http, $log) {
   }
 
   AuthFactory.logout = function(email, password) {
-   return $http.post('/logout')
+    currentUser = null;
+    return $http.post('/logout')
     .then(function(response){
         return true;
     })

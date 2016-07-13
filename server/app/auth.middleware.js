@@ -13,14 +13,14 @@ router.post('/login', function (req, res, next) {
       res.sendStatus(401);
     } else {
       req.session.userId = user.id;
-      res.sendStatus(204);
+      res.status(200).json({id: user.id, isAdmin: user.isAdmin, email: user.email});
     }
   })
   .catch(next);
 });
 
 router.post('/logout', function (req, res, next) {
-  req.session = null;
+  delete req.session.userId;
   res.sendStatus(200);
 });
 
@@ -29,7 +29,7 @@ router.post('/signup', function (req, res, next) {
   User.create(req.body)
   .then(function (user) {
     req.session.userId = user.id;
-    res.sendStatus(204);
+    res.status(200).json(user);
   })
 .catch(function(err) {
     if (err.errors[0] && err.errors[0].type === "unique violation") {
